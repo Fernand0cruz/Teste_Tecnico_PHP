@@ -15,6 +15,7 @@ class QuestionRegistry
     {
         return [
             1 => new \App\Questions\Question01(),
+            2 => new \App\Questions\Question02(),
         ];
     }
 
