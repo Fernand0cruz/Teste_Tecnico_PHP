@@ -4,55 +4,57 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
-/**
- * Classe que representa a questao 01
- * Estende a classe base Question definindo um contrato padrao
- */
-class Question01 extends \App\Contracts\Question
+class Question01
 {
-    /**
-     * Retorna o titulo da questao
-     */
     public function title(): string
     {
-        return 'teste';
+        return 'Questão 01 - Relatório de Campanha Promocional';
     }
 
-    /**
-     * Retorna a descricao da questao
-     */
     public function description(): string
     {
-        return 'teste';
+        return 'Uma loja virtual está realizando uma campanha promocional e precisa calcular o total de cupons gerados.'
+            . ' A regra da campanha determina que todos os números menores que um determinado valor, que sejam múltiplos de 3 ou 5, representam cupons válidos.'
+            . ' Crie uma função que receba um número inteiro positivo `N` e retorne a soma de todos os números menores que `N` que sejam múltiplos de 3 ou 5.';
     }
 
-    /**
-     * Retorna um exemplo de uso ou saida esperada
-     */
     public function example(): string
     {
-        return "teste";
+        return "Entrada:\n10\n\nSaída:\n23\n\nExplicação: Os números menores que 10 que são múltiplos de 3 ou 5\nsão: 3, 5, 6 e 9. A soma é 3 + 5 + 6 + 9 = 23";
     }
 
-    /**
-     * Retorna o input esperado para a questao
-     */
-    public function input(): string
+    public function input(): int
     {
-        return "teste";
+        return 10;
     }
 
-    /**
-     * Metodo principal onde a logica da questao seria executada
-     */
-    public function execute(): string
+    public function execute(): int
     {
-        return "teste";
+        return $this->calculateSum($this->input());
     }
 
     /**
-     * Retorna o status da questao (ex: resolvido ou pendente, qualquer status diferente de "Resolvido" vai ser considerado como pendente).
+     * Calcula a soma de todos os numeros menores que N que sao multiplos de 3 ou 5.
      */
+    private function calculateSum(int $n): int
+    {
+        $sum = 0;
+        for ($i = 1; $i < $n; $i++) {
+            if ($this->isMultipleOfThreeOrFive($i)) {
+                $sum += $i;
+            }
+        }
+        return $sum;
+    }
+
+    /**
+     * Verifica se um numero e multiplo de 3 ou 5.
+     */
+    private function isMultipleOfThreeOrFive(int $number): bool
+    {
+        return $number % 3 === 0 || $number % 5 === 0;
+    }
+
     public function status(): string
     {
         return 'Resolvido';

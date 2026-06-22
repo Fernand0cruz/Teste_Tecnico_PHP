@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-use App\Questions\Question01;
-
 class QuestionRegistry
 {
     /**
@@ -16,7 +14,7 @@ class QuestionRegistry
     public static function all(): array
     {
         return [
-            1 => new Question01(),
+            1 => new \App\Questions\Question01(),
         ];
     }
 
