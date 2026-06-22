@@ -5,6 +5,15 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $id = (int) ($_GET['id'] ?? 0);
+
+use App\Support\QuestionRegistry;
+
+$question = QuestionRegistry::find($id);
+
+if (!$question) {
+    http_response_code(404);
+    exit('Questão não encontrada.');
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,22 +56,34 @@ $id = (int) ($_GET['id'] ?? 0);
 
 <body>
     <div class="container">
-        <h1>Questão</h1>
+        <h1><?= $question->title() ?></h1>
         <hr>
-        <h2>Descrição:</h2>
-        <pre>Descrição</pre>
+        <?php if (method_exists($question, 'description')): ?>
+            <h2>Descrição:</h2>
+            <pre><?= $question->description() ?></pre>
+        <?php endif; ?>
 
-        <h2>Exemplo:</h2>
-        <pre>Exemplo</pre>
+        <?php if (method_exists($question, 'example')): ?>
+            <h2>Exemplo:</h2>
+            <pre><?= $question->example() ?></pre>
+        <?php endif; ?>
 
-        <h2>Resposta Esperada:</h2>
-        <pre>Resposta</pre>
+        <?php if (method_exists($question, 'response')): ?>
+            <h2>Resposta Esperada:</h2>
+            <pre><?= $question->response() ?></pre>
+        <?php endif; ?>
 
-        <h2>Entrada:</h2>
-        <pre>Entrada</pre>
+        <?php if (method_exists($question, 'input')): ?>
+            <h2>Entrada:</h2>
 
-        <h2>Resultado:</h2>
-        <pre>Resultado</pre>
+            <pre><?= print_r($question->input(), true) ?></pre>
+        <?php endif; ?>
+
+        <?php if (method_exists($question, 'execute')): ?>
+            <h2>Resultado:</h2>
+
+            <pre><?= print_r($question->execute(), true) ?></pre>
+        <?php endif; ?>
 
         <a class="back" href="index.php">
             ← Voltar

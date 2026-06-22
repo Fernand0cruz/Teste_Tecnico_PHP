@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Support\QuestionRegistry;
+
+$questions = QuestionRegistry::all();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -141,7 +144,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
         </div>
         <div class="cards">
             <div class="card">
-                <h2>1</h2>
+                <h2><?= count($questions) ?></h2>
                 <span>Questoes Implementadas</span>
             </div>
             <div class="card">
@@ -149,7 +152,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
                 <span>Versao do PHP</span>
             </div>
             <div class="card">
-                <h2>0%</h2>
+                <h2><?= QuestionRegistry::statusPercentage() ?>%</h2>
                 <span>Questoes Concluidas</span>
             </div>
         </div>
@@ -165,26 +168,36 @@ require_once __DIR__ . '/../vendor/autoload.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            title
-                        </td>
-                        <td>
-                            <span class="badge badge-success">
-                                Resolvida
-                            </span>
-                        </td>
-                        <td>
-                            <a
-                                class="btn"
-                                href="questions.php?id=1">
-                                Visualizar
-                            </a>
-                        </td>
-                    </tr>
+
+                    <?php foreach ($questions as $number => $question): ?>
+
+                        <tr>
+                            <td>
+                                <?= $number . ' -' ?>
+                            </td>
+                            <td>
+                                <?= $question->title() ?>
+                            </td>
+                            <td>
+                                <span class="badge <?= method_exists($question, 'status') && $question->status() === 'Resolvido'
+                                                        ? 'badge-success'
+                                                        : 'badge-pending' ?>">
+                                    <?= method_exists($question, 'status') && $question->status() === 'Resolvido'
+                                        ? 'Resolvido'
+                                        : 'Pendente' ?>
+                                </span>
+                            </td>
+                            <td>
+                                <a
+                                    class="btn"
+                                    href="questions.php?id=<?= $number ?>">
+                                    Visualizar
+                                </a>
+                            </td>
+                        </tr>
+
+                    <?php endforeach; ?>
+
                 </tbody>
             </table>
         </div>
