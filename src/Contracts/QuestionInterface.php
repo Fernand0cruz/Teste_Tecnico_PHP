@@ -4,66 +4,40 @@ declare(strict_types=1);
 
 namespace App\Contracts;
 
-abstract class Question
+interface QuestionInterface
 {
     /**
      * Retorna o titulo da questao
-     * 
-     * O titulo e obrigatorio para todas as questoes
      */
-    abstract public function title(): string;
+    public function title(): string;
 
     /**
      * Retorna a descricao da questao
-     * 
-     * A descricao e obrigatoria para todas as questoes
      */
-    abstract public function description(): string;
+    public function description(): string;
 
     /**
-     * Retorna um exemplo de entrada e saida da questao.
-     * 
-     * O exemplo e opcional
+     * Retorna um exemplo de entrada e saida da questao
      */
-    public function example(): string
-    {
-        return '';
-    }
+    public function example(): string;
 
     /**
      * Retorna a resposta esperada da questao
-     * 
-     * A resposta e opcional
      */
-    public function response(): string
-    {
-        return '';
-    }
+    public function response(): string;
 
     /**
      * Retorna os dados de entrada utilizados na execucao da questao
-     * 
-     * A entrada e opcional
      */
-    public function input(): mixed
-    {
-        return null;
-    }
+    public function input(): mixed;
 
     /**
      * Executa a lógica da questao e retorna o resultado
-     * 
-     * A execução e opcional
      */
-    public function execute(): mixed
-    {
-        return null;
-    }
+    public function execute(): mixed;
 
     /**
      * Retorna o status da implementacao da questao
-     *
-     * Exemplo: "Pendente" ou "Resolvida", qualquer status diferente de "Resolvido" vai ser considerado como pendente
      */
-    abstract public function status(): string;
+    public function status(): string;
 }
