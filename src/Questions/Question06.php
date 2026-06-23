@@ -13,32 +13,62 @@ class Question06
 
     public function description(): string
     {
-        return 'Crie uma consulta SQL que retorne o total de pedidos por usuário, incluindo usuários sem pedidos. Explique também quais índices criaria para melhorar a performance da consulta.';
+        return 'Considere as tabelas:
+
+## users
+
+| id | name  |
+| -- | ----- |
+| 1  | João  |
+| 2  | Maria |
+| 3  | Pedro |
+
+## orders
+
+| id | user_id | total |
+| -- | ------- | ----- |
+| 1  | 1       | 100   |
+| 2  | 1       | 150   |
+| 3  | 2       | 200   |
+
+Crie uma consulta SQL que retorne:
+
+| user  | total_orders |
+| ----- | ------------ |
+| João  | 250          |
+| Maria | 200          |
+| Pedro | 0            |
+
+Explique também quais índices criaria para melhorar a performance da consulta.';
     }
 
     public function response(): string
     {
         return "SELECT
-    u.id,
-    u.name,
+    u.name AS user,
     COALESCE(SUM(o.total), 0) AS total_orders
 FROM users u
-LEFT JOIN orders o
-    ON u.id = o.user_id
+LEFT JOIN orders o ON o.user_id = u.id
 GROUP BY u.id, u.name
 ORDER BY u.id;
 
-LEFT JOIN garante que todos os usuarios sejam retornados, mesmo aqueles que nao possuem pedidos.
-SUM(o.total) calcula o valor total dos pedidos de cada usuario.
-COALESCE(..., 0) substitui NULL por 0 para usuarios sem pedidos.
-GROUP BY agrupa os registros por usuario para que a soma seja calculada individualmente.
-ORDER BY organiza o resultado pelo identificador do usuario.
+Indices para melhorar a performance
 
-Indices recomendados:
-PRIMARY KEY em users(id), Utilizado para localizar usuarios de forma eficiente.
+Os indices recomendados seriam:
 
-Indice em orders(user_id), Utilizado para acelerar a busca de pedidos relacionados a cada usuario.
-";
+-- Ja existe por ser chave primaria
+PRIMARY KEY (id) ON users;
+
+-- Indice para acelerar o JOIN
+CREATE INDEX idx_orders_user_id
+ON orders(user_id);
+
+Se a tabela orders for muito grande e essa consulta for executada frequentemente, um indice composto tambem pode ajudar:
+
+CREATE INDEX idx_orders_user_total
+ON orders(user_id, total);
+
+Esse indice permite localizar rapidamente os pedidos de cada usuario e pode reduzir leituras durante a agregacao.";
     }
 
     public function status(): string
