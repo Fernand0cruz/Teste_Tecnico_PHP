@@ -69,7 +69,7 @@ if (!$question) {
         <?php endif; ?>
 
         <?php if (method_exists($question, 'response')): ?>
-            <h2>Resposta Esperada:</h2>
+            <h2>Resposta:</h2>
             <pre><?= $question->response() ?></pre>
         <?php endif; ?>
 
