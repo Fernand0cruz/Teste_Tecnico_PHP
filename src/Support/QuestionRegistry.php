@@ -23,6 +23,7 @@ class QuestionRegistry
             7 => new \App\Questions\Question07(),
             8 => new \App\Questions\Question08(),
             9 => new \App\Questions\Question09(),
+            10 => new \App\Questions\Question10(),
         ];
     }
 
