@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
-class Question08
+class Question08 implements
+    \App\Contracts\QuestionInterface,
+    \App\Contracts\HasExecuteInterface,
+    \App\Contracts\HasResponseInterface
 {
     public function title(): string
     {
