@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\CouponCalculator;
+
 class Question01 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasExampleInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private CouponCalculator $calculator;
+
+    public function __construct(?CouponCalculator $calculator = null)
+    {
+        $this->calculator = $calculator ?? new CouponCalculator();
+    }
+
     public function title(): string
     {
         return 'Questão 01 - Relatório de Campanha Promocional';
@@ -34,29 +43,7 @@ class Question01 implements
 
     public function execute(): int
     {
-        return $this->calculateSum($this->input());
-    }
-
-    /**
-     * Calcula a soma de todos os numeros menores que N que sao multiplos de 3 ou 5.
-     */
-    private function calculateSum(int $n): int
-    {
-        $sum = 0;
-        for ($i = 1; $i < $n; $i++) {
-            if ($this->isMultipleOfThreeOrFive($i)) {
-                $sum += $i;
-            }
-        }
-        return $sum;
-    }
-
-    /**
-     * Verifica se um numero e multiplo de 3 ou 5.
-     */
-    private function isMultipleOfThreeOrFive(int $number): bool
-    {
-        return $number % 3 === 0 || $number % 5 === 0;
+        return $this->calculator->sumMultiplesBelow($this->input());
     }
 
     public function status(): string

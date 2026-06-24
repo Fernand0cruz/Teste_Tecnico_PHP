@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\StockConsolidator;
+
 class Question10 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasInputInterface,
-    \app\Contracts\HasExecuteInterface
+    \App\Contracts\HasExecuteInterface
 {
+    private StockConsolidator $consolidator;
+
+    public function __construct(?StockConsolidator $consolidator = null)
+    {
+        $this->consolidator = $consolidator ?? new StockConsolidator();
+    }
+
     public function title(): string
     {
         return 'Questão 10 - Consolidação de Estoque';
     }
-
 
     public function description(): string
     {
@@ -46,21 +54,7 @@ A solução deve funcionar independentemente da quantidade de registros.';
 
     public function execute(): array
     {
-        return $this->consolidateStock($this->input());
-    }
-
-    /**
-     * Consolida o estoque agrupando produtos por nome
-     */
-    private function consolidateStock(array $items): array
-    {
-        $consolidated = [];
-        foreach ($items as $item) {
-            $product = $item['product'];
-            $quantity = $item['quantity'];
-            $consolidated[$product] = ($consolidated[$product] ?? 0) + $quantity;
-        }
-        return $consolidated;
+        return $this->consolidator->consolidate($this->input());
     }
 
     public function status(): string

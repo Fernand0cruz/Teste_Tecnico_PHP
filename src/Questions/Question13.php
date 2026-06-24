@@ -4,8 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
-class Question13
+use App\Services\FinancialReportGenerator;
+
+class Question13 implements
+    \App\Contracts\QuestionInterface,
+    \App\Contracts\HasExampleInterface,
+    \App\Contracts\HasInputInterface,
+    \App\Contracts\HasExecuteInterface
 {
+    private FinancialReportGenerator $generator;
+
+    public function __construct(?FinancialReportGenerator $generator = null)
+    {
+        $this->generator = $generator ?? new FinancialReportGenerator();
+    }
+
     public function title(): string
     {
         return 'Questão 13 - Geração de Relatório Financeiro';
@@ -15,7 +28,6 @@ class Question13
     {
         return 'Uma empresa possui milhares de lançamentos financeiros. Crie uma função que retorne o total de receitas, total de despesas e saldo final.';
     }
-
 
     public function example(): string
     {
@@ -39,30 +51,7 @@ class Question13
 
     public function execute(): array
     {
-        return $this->generateFinancialReport($this->input());
-    }
-
-    /**
-     * Gera relatorio de receitas e despesas.
-     */
-    private function generateFinancialReport(array $transactions): array
-    {
-        $income = 0;
-        $expense = 0;
-
-        foreach ($transactions as $transaction) {
-            if ($transaction['type'] === 'income') {
-                $income += $transaction['amount'];
-            } elseif ($transaction['type'] === 'expense') {
-                $expense += $transaction['amount'];
-            }
-        }
-
-        return [
-            'income' => $income,
-            'expense' => $expense,
-            'balance' => $income - $expense,
-        ];
+        return $this->generator->generate($this->input());
     }
 
     public function status(): string

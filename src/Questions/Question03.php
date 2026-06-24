@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\ParenthesesValidator;
+
 class Question03 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasExampleInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private ParenthesesValidator $validator;
+
+    public function __construct(?ParenthesesValidator $validator = null)
+    {
+        $this->validator = $validator ?? new ParenthesesValidator();
+    }
+
     public function title(): string
     {
         return 'Questão 03 - Validação de Expressões';
@@ -40,40 +49,13 @@ class Question03 implements
 
     public function execute(): array
     {
-        $inputs = $this->input();
         $results = [];
 
-        foreach ($inputs as $input) {
-            $results[] = $this->isValidParentheses($input) ? 'válido' : 'inválido';
+        foreach ($this->input() as $input) {
+            $results[] = $this->validator->isValid($input) ? 'válido' : 'inválido';
         }
 
         return $results;
-    }
-
-    /**
-     * Valida se uma sequencia de parenteses esta balanceada.
-     *
-     * @param string $s A sequencia de parenteses a ser validada.
-     * @return bool Retorna true se a sequencia estiver balanceada, caso contrario, false.
-     */
-    private function isValidParentheses(string $s): bool
-    {
-        $stack = [];
-
-        for ($i = 0; $i < strlen($s); $i++) {
-            $char = $s[$i];
-
-            if ($char === '(') {
-                array_push($stack, $char);
-            } else {
-                if (empty($stack)) {
-                    return false;
-                }
-                array_pop($stack);
-            }
-        }
-
-        return empty($stack);
     }
 
     public function status(): string

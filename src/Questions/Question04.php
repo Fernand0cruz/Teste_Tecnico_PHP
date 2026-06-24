@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\CustomerBillingConsolidator;
+
 class Question04 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasExampleInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private CustomerBillingConsolidator $consolidator;
+
+    public function __construct(?CustomerBillingConsolidator $consolidator = null)
+    {
+        $this->consolidator = $consolidator ?? new CustomerBillingConsolidator();
+    }
+
     public function title(): string
     {
         return 'Questão 4 - Relatório de Faturamento por Cliente';
@@ -38,21 +47,7 @@ class Question04 implements
 
     public function execute(): array
     {
-        return $this->consolidateByCustomer($this->input());
-    }
-
-    /**
-     * Consolida o total de cada cliente agrupando os pedidos.
-     */
-    private function consolidateByCustomer(array $orders): array
-    {
-        $totals = [];
-        foreach ($orders as $order) {
-            $customerId = $order['customer_id'];
-            $total = $order['total'];
-            $totals[$customerId] = ($totals[$customerId] ?? 0) + $total;
-        }
-        return $totals;
+        return $this->consolidator->consolidate($this->input());
     }
 
     public function status(): string

@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\PermissionChecker;
+
 class Question12 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasResponseInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private PermissionChecker $checker;
+
+    public function __construct(?PermissionChecker $checker = null)
+    {
+        $this->checker = $checker ?? new PermissionChecker();
+    }
+
     public function title(): string
     {
         return 'Questão 12 - Sistema de Permissões';
@@ -95,40 +104,11 @@ canAccess('Operador', 'create_user'); // false
             $results[] = [
                 'role' => $role,
                 'permission' => $permission,
-                'has_access' => $this->canAccess($role, $permission) ? 'true' : 'false',
+                'has_access' => $this->checker->canAccess($role, $permission) ? 'true' : 'false',
             ];
         }
 
         return $results;
-    }
-
-    private const PERMISSIONS = [
-        'Administrador' => [
-            'create_user',
-            'edit_user',
-            'delete_user',
-            'view_reports',
-        ],
-        'Gerente' => [
-            'create_user',
-            'edit_user',
-            'view_reports',
-        ],
-        'Operador' => [
-            'view_reports',
-        ],
-        'Cliente' => [
-            'view_profile',
-        ],
-    ];
-
-    private function canAccess(string $role, string $permission): bool
-    {
-        return in_array(
-            $permission,
-            self::PERMISSIONS[$role] ?? [],
-            true
-        );
     }
 
     public function status(): string

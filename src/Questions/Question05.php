@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\BinaryProductSearch;
+
 class Question05 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private BinaryProductSearch $search;
+
+    public function __construct(?BinaryProductSearch $search = null)
+    {
+        $this->search = $search ?? new BinaryProductSearch();
+    }
+
     public function title(): string
     {
         return 'Questão 5 - Localização de Produto em Catálogo';
@@ -37,33 +46,7 @@ Utilize busca binária.';
 
     public function execute(): ?int
     {
-        $products = $this->input();
-        $productId = 107;
-
-        return $this->binarySearch($products, $productId);
-    }
-
-    /**
-     * Implementacao da busca binaria para encontrar o indice do produto
-     */
-    private function binarySearch(array $arr, int $target): ?int
-    {
-        $left = 0;
-        $right = count($arr) - 1;
-
-        while ($left <= $right) {
-            $mid = intdiv($left + $right, 2);
-
-            if ($arr[$mid] === $target) {
-                return $mid; // Indice encontrado
-            } elseif ($arr[$mid] < $target) {
-                $left = $mid + 1; // Busca na metade direita
-            } else {
-                $right = $mid - 1; // Busca na metade esquerda
-            }
-        }
-
-        return null; // Produto nao encontrado
+        return $this->search->findIndex($this->input(), 107);
     }
 
     public function status(): string

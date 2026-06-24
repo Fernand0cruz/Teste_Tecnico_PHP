@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\DiscountEngine;
+
 class Question07 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasExampleInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private DiscountEngine $engine;
+
+    public function __construct(?DiscountEngine $engine = null)
+    {
+        $this->engine = $engine ?? new DiscountEngine();
+    }
+
     public function title(): string
     {
         return 'Questão 07 - Motor de Descontos';
@@ -32,48 +41,7 @@ class Question07 implements
 
     public function execute(): array
     {
-        $subtotal = $this->input();
-        return $this->calculateDiscount($subtotal);
-    }
-
-    /**
-     * Calcula o desconto baseado no valor da compra
-     */
-    private function calculateDiscount(float $subtotal): array
-    {
-        $discountPercentage = $this->getDiscountPercentage($subtotal);
-        $discountValue = ($subtotal * $discountPercentage) / 100;
-        $total = $subtotal - $discountValue;
-
-        return [
-            'subtotal' => $subtotal,
-            'discount_percentage' => $discountPercentage,
-            'discount_value' => $discountValue,
-            'total' => $total,
-        ];
-    }
-
-    /**
-     * Define o percentual de desconto baseado na faixa de valor
-     *
-     * Faixas:
-     * - > 1000: 15%
-     * - > 500: 10%
-     * - > 100: 5%
-     * - default: 0%
-     */
-    private function getDiscountPercentage(float $subtotal): int
-    {
-        if ($subtotal > 1000) {
-            return 15;
-        }
-        if ($subtotal > 500) {
-            return 10;
-        }
-        if ($subtotal > 100) {
-            return 5;
-        }
-        return 0;
+        return $this->engine->calculate((float) $this->input());
     }
 
     public function status(): string

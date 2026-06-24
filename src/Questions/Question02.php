@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace App\Questions;
 
+use App\Services\CharacterFrequencyCounter;
+
 class Question02 implements
     \App\Contracts\QuestionInterface,
     \App\Contracts\HasExampleInterface,
     \App\Contracts\HasInputInterface,
     \App\Contracts\HasExecuteInterface
 {
+    private CharacterFrequencyCounter $counter;
+
+    public function __construct(?CharacterFrequencyCounter $counter = null)
+    {
+        $this->counter = $counter ?? new CharacterFrequencyCounter();
+    }
+
     public function title(): string
     {
         return 'Questão 02 - Estatísticas de Busca';
@@ -33,20 +42,7 @@ class Question02 implements
 
     public function execute(): array
     {
-        return $this->countCharacterFrequency($this->input());
-    }
-
-    /**
-     * Conta a frequencia de cada caractere na string
-     */
-    private function countCharacterFrequency(string $input): array
-    {
-        $characterCount = [];
-        for ($i = 0; $i < strlen($input); $i++) {
-            $char = $input[$i];
-            $characterCount[$char] = isset($characterCount[$char]) ? $characterCount[$char] + 1 : 1;
-        }
-        return $characterCount;
+        return $this->counter->count($this->input());
     }
 
     public function status(): string
