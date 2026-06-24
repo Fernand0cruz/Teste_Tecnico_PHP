@@ -21,7 +21,7 @@ if (!$question) {
 
 <head>
     <meta charset="UTF-8">
-    <title>Questão</title>
+    <title><?= $question->title() ?></title>
 
     <style>
         body {
