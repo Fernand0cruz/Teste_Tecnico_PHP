@@ -33,24 +33,25 @@ if (!$question) {
         <h2>Descrição:</h2>
         <pre><?= $question->description() ?></pre>
 
-        <?php if (empty($question->example())): ?>
+        <?php if (!empty($question->example())): ?>
             <h2>Exemplo:</h2>
             <pre><?= $question->example() ?></pre>
         <?php endif; ?>
 
-        <?php if (empty($question->response())): ?>
+        <?php if (!empty($question->response())): ?>
             <h2>Resposta:</h2>
             <pre><?= $question->response() ?></pre>
         <?php endif; ?>
 
-        <?php if (empty($question->input())): ?>
+        <?php if ($question->input() !== null): ?>
             <h2>Entrada:</h2>
             <pre><?= print_r($question->input(), true) ?></pre>
         <?php endif; ?>
 
-        <?php if (empty($question->execute())): ?>
+        <?php $result = $question->execute(); ?>
+        <?php if ($result !== null): ?>
             <h2>Resultado:</h2>
-            <pre><?= print_r($question->execute(), true) ?></pre>
+            <pre><?= print_r($result, true) ?></pre>
         <?php endif; ?>
 
         <a class="back" href="index.php">
