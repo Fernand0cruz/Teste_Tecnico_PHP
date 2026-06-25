@@ -22,66 +22,34 @@ if (!$question) {
 <head>
     <meta charset="UTF-8">
     <title><?= $question->title() ?></title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #f4f4f4;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: #fff;
-            padding: 24px;
-            border-radius: 8px;
-        }
-
-        pre {
-            background: #eee;
-            padding: 15px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            overflow-x: hidden;
-        }
-
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/questions.css">
 </head>
 
 <body>
     <div class="container">
         <h1><?= $question->title() ?></h1>
         <hr>
-        <?php if (method_exists($question, 'description')): ?>
-            <h2>Descrição:</h2>
-            <pre><?= $question->description() ?></pre>
-        <?php endif; ?>
 
-        <?php if (method_exists($question, 'example')): ?>
+        <h2>Descrição:</h2>
+        <pre><?= $question->description() ?></pre>
+
+        <?php if (empty($question->example())): ?>
             <h2>Exemplo:</h2>
             <pre><?= $question->example() ?></pre>
         <?php endif; ?>
 
-        <?php if (method_exists($question, 'response')): ?>
+        <?php if (empty($question->response())): ?>
             <h2>Resposta:</h2>
             <pre><?= $question->response() ?></pre>
         <?php endif; ?>
 
-        <?php if (method_exists($question, 'input')): ?>
+        <?php if (empty($question->input())): ?>
             <h2>Entrada:</h2>
-
             <pre><?= print_r($question->input(), true) ?></pre>
         <?php endif; ?>
 
-        <?php if (method_exists($question, 'execute')): ?>
+        <?php if (empty($question->execute())): ?>
             <h2>Resultado:</h2>
-
             <pre><?= print_r($question->execute(), true) ?></pre>
         <?php endif; ?>
 
