@@ -6,19 +6,8 @@ namespace App\Questions;
 
 use App\Services\FinancialReportGenerator;
 
-class Question13 implements
-    \App\Contracts\QuestionInterface,
-    \App\Contracts\HasExampleInterface,
-    \App\Contracts\HasInputInterface,
-    \App\Contracts\HasExecuteInterface
+class Question13 extends QuestionAbstract
 {
-    private FinancialReportGenerator $generator;
-
-    public function __construct(?FinancialReportGenerator $generator = null)
-    {
-        $this->generator = $generator ?? new FinancialReportGenerator();
-    }
-
     public function title(): string
     {
         return 'Questão 13 - Geração de Relatório Financeiro';
@@ -26,16 +15,20 @@ class Question13 implements
 
     public function description(): string
     {
-        return 'Uma empresa possui milhares de lançamentos financeiros. Crie uma função que retorne o total de receitas, total de despesas e saldo final.';
+        return <<<'TEXT'
+                Uma empresa possui milhares de lançamentos financeiros. Crie uma função que retorne o total de receitas, total de despesas e saldo final.
+                TEXT;
     }
 
     public function example(): string
     {
-        return "[
-    ['type' => 'income', 'amount' => 1000],
-    ['type' => 'expense', 'amount' => 200],
-    ['type' => 'expense', 'amount' => 100],
-]";
+        return <<<'TEXT'
+                [
+                    ['type' => 'income', 'amount' => 1000],
+                    ['type' => 'expense', 'amount' => 200],
+                    ['type' => 'expense', 'amount' => 100],
+                ]
+                TEXT;
     }
 
     public function input(): array
@@ -51,7 +44,8 @@ class Question13 implements
 
     public function execute(): array
     {
-        return $this->generator->generate($this->input());
+        $generator = new FinancialReportGenerator();
+        return $generator->generate($this->input());
     }
 
     public function status(): string
